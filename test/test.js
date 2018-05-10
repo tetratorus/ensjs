@@ -1,5 +1,4 @@
 const ENS = require('../index.js');
-process.on('warning', e => console.warn(e.stack));
 const assert = require('assert');
 const async = require('async');
 const fs = require('fs');
@@ -124,91 +123,113 @@ describe('ENS', () => {
 			}
 		});
 
-		it('should do reverse resolution', function(done) {
-			var resolver = ens.resolver('foo.eth');
-			resolver.reverseAddr().then(function(reverse) {
-				return reverse.name().then(function(result) {
-					assert.equal(result, "deployer.eth");
-					done();
-				});
-			}).catch(assert.isError);
+		it('should do reverse resolution', async () => {
+			try {
+				const resolver = ens.resolver('foo.eth');
+				const reverse = await resolver.reverseAddr();
+				const result = await reverse.name();
+				assert.equal(result, "deployer.eth");
+				return;
+			} catch (err) {
+				assert.fail(err);
+			}
 		});
 
-		it('should fetch ABIs from names', function(done) {
-			ens.resolver('foo.eth').abi().then(function(abi) {
+		it('should fetch ABIs from names', async () => {
+			try {
+				const abi = await ens.resolver('foo.eth').abi();
 				assert.equal(abi.length, 2);
 				assert.equal(abi[0].name, "test2");
-				done();
-			}).catch(assert.isError);
+				return;
+			} catch (err) {
+				assert.fail(err);
+			}
 		});
 
-		it('should fetch ABIs from reverse records', function(done) {
-			ens.resolver('baz.eth').abi().then(function(abi) {
+		it('should fetch ABIs from reverse records', async () => {
+			try {
+				const abi = await ens.resolver('baz.eth').abi();
 				assert.equal(abi.length, 2);
 				assert.equal(abi[0].name, "test");
-				done();
-			}).catch(assert.isError);
+				return;
+			} catch (err) {
+				assert.fail(err);
+			}
 		});
 
-		it('should fetch contract instances', function(done) {
-			ens.resolver('baz.eth').contract().then(function(contract) {
+		it('should fetch contract instances', async () => {
+			try {
+				const contract = await ens.resolver('baz.eth').contract();
 				assert.ok(contract.methods.test != undefined);
-				done();
-			}).catch(assert.isError);
+				return;
+			} catch (err) {
+				assert.fail(err);
+			}
 		});
 	});
 
 	describe('#owner()', function() {
-		it('should return owner values', function(done) {
-			ens.owner('bar.eth').then(function(result) {
+		it('should return owner values', async () => {
+			try {
+				const result = await ens.owner('bar.eth');
 				assert.equal(result, accounts[0]);
-				done();
-			}).catch(assert.isError);
+				return;
+			} catch (err) {
+				assert.fail(err);
+			}
 		});
 	});
 
 	describe("#setSubnodeOwner", function() {
-		it('should permit setting subnode owners', function(done) {
-			ens.setSubnodeOwner('BAZ.bar.eth', accounts[0], {from: accounts[0]}).then(function(txid) {
-				return ens.owner('baz.bar.eth').then(function(owner) {
-					assert.equal(owner, accounts[0]);
-					done();
-				});
-			}).catch(assert.isError);
+		it('should permit setting subnode owners', async () => {
+			try {
+				await ens.setSubnodeOwner('BAZ.bar.eth', accounts[0], {from: accounts[0]});
+				const owner = await ens.owner('baz.bar.eth');
+				assert.equal(owner, accounts[0]);
+				return;
+			} catch (err) {
+				assert.fail(err);
+			}
 		});
 	});
 
 	describe("#setResolver", function() {
-		it('should permit resolver updates', function(done) {
-			var addr = '0x2341234123412341234123412341234123412341';
-			ens.setResolver('baz.bar.eth', addr).then(function(txid) {
-				return ens.resolver('baz.bar.eth').resolverAddress().then(function(address) {
-					assert.equal(address, addr);
-					done();
-				});
-			}).catch(assert.isError);
+		it('should permit resolver updates', async () => {
+			try {
+				const addr = '0x2341234123412341234123412341234123412341';
+				await ens.setResolver('baz.bar.eth', addr);
+				const address = await ens.resolver('baz.bar.eth').resolverAddress();
+				assert.equal(address, addr);
+				return;
+			} catch (err) {
+				assert.fail(err);
+			}
 		});
 	});
 
 	describe("#setOwner", function() {
-		it('should permit owner updates', function(done) {
-			var addr = '0x3412341234123412341234123412341234123412';
-			ens.setOwner('baz.bar.eth', addr).then(function(txid) {
-				return ens.owner('baz.bar.eth').then(function(owner) {
-					assert.equal(owner, addr);
-					done();
-				});
-			}).catch(assert.isError);
+		it('should permit owner updates', async () => {
+			try {
+				const addr = '0x3412341234123412341234123412341234123412';
+				await ens.setOwner('baz.bar.eth', addr);
+				const owner = await ens.owner('baz.bar.eth');
+				assert.equal(owner, addr);
+				return;
+			} catch (err) {
+				assert.fail(err);
+			}
 		});
 	});
 
 	describe("#reverse", function() {
-		it('should look up reverse DNS records', function(done) {
-			ens.reverse(deployens._address).name()
-			.then(function(result) {
+		it('should look up reverse DNS records', async () => {
+			try {
+				const result = await ens.reverse(deployens._address).name();
 				assert.equal(result, 'deployer.eth');
-				done();
-			}).catch(assert.isError);
+				return;
+			} catch (err) {
+				assert.fail(err);
+			}
 		});
 	});
 });
