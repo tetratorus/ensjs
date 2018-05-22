@@ -18,7 +18,7 @@ var Promise = require('bluebird');
 var textEncoding = require('text-encoding');
 var TextDecoder = textEncoding.TextDecoder;
 var _ = require('underscore');
-var Web3 = require('web3');
+// var Web3 = require('web3');
 var utils = require('../src/utils.js');
 var abi = require('../src/abi.js');
 
@@ -47,7 +47,6 @@ var abiDecoders = {
 
 var supportedDecoders = _.reduce(_.keys(abiDecoders), function(memo, val) { return memo | val; });
 
-ENS.NameNotFound = Error("ENS name not found");
 
 /**
  * @class
@@ -162,7 +161,7 @@ Resolver.prototype.contract = function() {
  * @param {object} provider A web3 provider to use to communicate with the blockchain.
  * @param {address} address Optional. The address of the ENS registry. Defaults to the public ENS registry.
  */
-function ENS(provider, address) {
+function ENS(provider, address, Web3) {
     // Ensures backwards compatibility
     if (provider.currentProvider) {
         provider = provider.currentProvider;

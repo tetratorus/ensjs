@@ -74,7 +74,7 @@ var testSuiteGenerator = function(beforeHook, afterHook) {
 			it('should error when the name does not exist', function(done) {
 				ens.resolver('quux.eth').addr()
 				.catch(function(err) {
-					assert.equal(err, ENS.NameNotFound);
+					assert.equal(err, "Error: ENS name not found");
 					done();
 				});
 			});
@@ -240,7 +240,8 @@ describe('ENS (Web3 1.x)', testSuiteGenerator(
 ));
 
 
-describe('ENS (Web3 0.x)', testSuiteGenerator(function(done) {
+describe('ENS (Web3 0.x)', testSuiteGenerator(
+	function(done) {
 	this.timeout(20000);
 	if (web3 === null) {
 		web3 = new Web3_0();

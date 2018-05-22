@@ -13,8 +13,9 @@
 */
 
 var Web3 = require('web3');
-// var ENS_0 = require('./src/ens_0.js');
-// var ENS_1 = require('./src/ens_1.js');
+var utils = require('./src/utils.js');
+var ENS_0 = require('./src/ens_0.js');
+var ENS_1 = require('./src/ens_1.js');
 
 /**
  * Wrapper function that returns a version of ENS that is compatible
@@ -25,10 +26,12 @@ function ENSVersionHandler (provider, address, Web3js) {
     Web3 = Web3js;
   }
   if (!!/^0\./.exec(Web3.version || (new Web3()).version.api)) {
-    return require('./src/ens_0.js');
+    // return ENS_0(provider, address, Web3)
+    return utils.construct(ENS_0, [provider, address, Web3]);;
   } else {
-    return require('./src/ens_1.js');
+    // return ENS_1(provider, address, Web3);
+    return utils.construct(ENS_1, [provider, address, Web3]);
   }
 }
 
-module.exports = ENSVersionHandler();
+module.exports = ENSVersionHandler;

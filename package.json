@@ -5,7 +5,8 @@
   "description": "Javascript bindings for the Ethereum Name Service",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "inspect": "mocha --inspect-brk"
   },
   "repository": {
     "type": "git",
